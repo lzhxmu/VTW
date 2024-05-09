@@ -1,0 +1,46 @@
+# Python
+__pycache__
+*.pyc
+*.egg-info
+dist
+
+# Log
+*.log
+*.log.*
+*.json
+*.jsonl
+
+# Data
+!**/alpaca-data-conversation.json
+
+# Editor
+.idea
+*.swp
+
+# Other
+.DS_Store
+wandb
+output
+
+checkpoints
+ckpts*
+
+.ipynb_checkpoints
+*.ipynb
+
+# DevContainer
+!.devcontainer/*
+
+eval.sh
+visualization/
+lmms.egg-info/
+lmms_eval.egg-info/
+mmlogs/
+newlogs/
+visualization/
+cli.sh
+eval_all.sh
+search.sh
+llava/model/language_model/Veq2.py
+test.py
+test.sh

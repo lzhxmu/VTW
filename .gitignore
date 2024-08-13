@@ -32,6 +32,6 @@ ckpts*
 !.devcontainer/*
 
 
-LISA-VTW/
-VideoLLaVA/
+
+
 VLMEvalKit-evaluation/

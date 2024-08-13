@@ -1,6 +1,6 @@
 # Visual Tokens Withdrawal 
-Code release for "Boosting Multimodal Large Language Models with Visual Tokens
-Withdrawal for Rapid Inference" 
+Code release for "[Boosting Multimodal Large Language Models with Visual Tokens
+Withdrawal for Rapid Inference](https://arxiv.org/abs/2405.05803)" 
 
 
 ## Experiments Environment
@@ -92,3 +92,15 @@ bash scripts/v1_5/eval/eval_qa_tgif.sh
 
 
 
+## Acknowledge
+This work is built upon the [LLaVA](https://github.com/haotian-liu/LLaVA), [VideoLLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA), [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval), and [VLMEvalKit](https://github.com/open-compass/VLMEvalKit/).
+
+## Citation
+```
+@article{lin2024boosting,
+  title={Boosting Multimodal Large Language Models with Visual Tokens Withdrawal for Rapid Inference},
+  author={Lin, Zhihang and Lin, Mingbao and Lin, Luxi and Ji, Rongrong},
+  journal={arXiv preprint arXiv:2405.05803},
+  year={2024}
+}
+```

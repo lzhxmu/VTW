@@ -155,6 +155,18 @@ def parse_eval_args() -> argparse.Namespace:
         help="use visual tokens withdrawal",
     )
     parser.add_argument(
+        "--random_drop_layer",
+        action="store_true",
+        default=False,
+        help="use random drop layer",
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default="vtw",
+        help="vtw or random",
+    )
+    parser.add_argument(
         "--k",
         type=int,
         default=16,
@@ -366,9 +378,12 @@ if __name__ == "__main__":
     temp_cache.k = args.k
     temp_cache.findk = args.findk
     temp_cache.use_vtw = args.use_vtw
+    temp_cache.random_drop_layer = args.random_drop_layer
+    temp_cache.mode = args.mode
     if temp_cache.use_vtw:
         print("use visual tokens withdrawal")
-        print("k:", temp_cache.k)
+        print(temp_cache.__dict__)
+
     cli_evaluate()
     if args.findk:
         if "llava-v1.5-13b" in args.model_args.lower():
@@ -383,4 +398,13 @@ if __name__ == "__main__":
         kl_results = torch.tensor(temp_cache.KL_di_total).mean(dim=0)
         first_index = (kl_results <= eta).nonzero()[0]
         print("k:", first_index.item()+5)
-        
+        # save_path = './visualization/NeXT/'
+        # if not os.path.exists(save_path):
+        #     os.makedirs(save_path)
+        # kl_results = torch.tensor(temp_cache.KL_di_total).mean(dim=0)
+        # plt.plot(kl_results)
+        # plt.xlabel('Decode Layer')
+        # plt.ylabel('kl_div')
+        # plt.savefig(f'{save_path}{args.tasks}_remove_image_last_kl_div.png')
+        # results_df = pd.DataFrame(kl_results)
+        # results_df.to_csv(f'{save_path}{args.tasks}_remove_image_last_kl_div_{first_index.item()+5}.csv', index=False)

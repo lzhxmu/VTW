@@ -1,8 +1,8 @@
 import torch
 from typing import Tuple, Callable
 from transformers import AutoConfig
-from transformers.models.llama.modeling_llama import  LlamaDecoderLayer, LlamaModel, _prepare_4d_causal_attention_mask, _prepare_4d_causal_attention_mask_for_sdpa, Cache, DynamicCache
-from transformers.models.llama.modeling_llama import  *
+from .my_modeling_llama import  LlamaDecoderLayer, LlamaModel, _prepare_4d_causal_attention_mask, _prepare_4d_causal_attention_mask_for_sdpa, Cache, DynamicCache
+from .my_modeling_llama import  *
 from transformers.models.llama import LlamaConfig
 from transformers.modeling_outputs import BaseModelOutputWithPast
 from transformers import LlamaForCausalLM
@@ -10,11 +10,15 @@ from typing import List, Optional, Tuple, Union
 from torch import nn
 import numpy as np
 import pdb
+import random
 
 class temp_cache:
-    use_vtw = False
+    use_vtw = True
     findk = False
     pe_type = "keep"
+    mode = "vtw"
+    random_drop_layer = False
+
     k = 15
     image_token_nums = 576
     system_token_nums = 35
@@ -106,6 +110,8 @@ class VTWLlamaForCausalLM(LlamaForCausalLM):
 
         loss = None
         if labels is not None:
+            if temp_cache.use_vtw == True:
+                labels = torch.cat([labels[:, :temp_cache.system_token_nums], labels[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
             # Shift so that tokens < n predict n
             shift_logits = logits[..., :-1, :].contiguous()
             shift_labels = labels[..., 1:].contiguous()
@@ -278,6 +284,17 @@ class VTWLlamaModel(LlamaModel):
                     all_hidden_states += (hidden_states,)
 
                 if self.gradient_checkpointing and self.training:
+
+                    if temp_cache.use_vtw:
+                        
+                        drop_layer_idx = temp_cache.k
+                        if temp_cache.pe_type == "keep":
+                            if decoder_layer.self_attn.layer_idx == drop_layer_idx and seq_length > 1:
+                                hidden_states = torch.cat([hidden_states[:, :temp_cache.system_token_nums], hidden_states[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                                position_ids = torch.cat([position_ids[:, :temp_cache.system_token_nums], position_ids[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                                if attention_mask != None:
+                                    attention_mask = torch.cat([attention_mask[:, :temp_cache.system_token_nums], attention_mask[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                    
                     layer_outputs = self._gradient_checkpointing_func(
                         decoder_layer.__call__,
                         hidden_states,
@@ -292,8 +309,16 @@ class VTWLlamaModel(LlamaModel):
                         drop_layer_idx = temp_cache.k
                         if temp_cache.pe_type == "keep":
                             if decoder_layer.self_attn.layer_idx == drop_layer_idx and seq_length > 1:
-                                hidden_states = torch.cat([hidden_states[:, :temp_cache.system_token_nums], hidden_states[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
-                                position_ids = torch.cat([position_ids[:, :temp_cache.system_token_nums], position_ids[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                                if temp_cache.mode == "vtw":
+                                    hidden_states = torch.cat([hidden_states[:, :temp_cache.system_token_nums], hidden_states[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                                    position_ids = torch.cat([position_ids[:, :temp_cache.system_token_nums], position_ids[:, temp_cache.system_token_nums + temp_cache.image_token_nums:]], dim=1)
+                                elif temp_cache.mode == "random":
+                                    total_token_nums = hidden_states.shape[1]
+                                    reserve_token_nums = total_token_nums - temp_cache.image_token_nums
+                                    reserve_token_index = random.sample(range(0, total_token_nums), reserve_token_nums)
+                                    reserve_token_index.sort()
+                                    hidden_states = hidden_states[:, reserve_token_index]
+                                    position_ids = position_ids[:, reserve_token_index]
                         else:
                             if decoder_layer.self_attn.layer_idx == drop_layer_idx and seq_length == 1:
                                 position_ids[0][0] = past_key_values.key_cache[drop_layer_idx].shape[2]

@@ -15,15 +15,7 @@ pip install -e .
 cd lmms-evaluation
 pip install -e .
 ```
-### Modify a Few Lines of Code
-```python 
-# 1.Open file  /anaconda3/envs/vtw/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py
-# 2.Modify code 
-cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
-# to:
-cos, sin = self.rotary_emb(value_states, seq_len=position_ids.max().item() + 1)
-# Note that there are a total of 3 identical lines of code that need to be modified
-```
+
 ## Chatbot
 ```
 python -m llava.serve.cli \
@@ -67,3 +59,36 @@ accelerate launch  --num_processes=1 --main_process_port=12346 -m lmms_eval --mo
 ```
 ### You will get
 ![alt text](./assets/vtw.png)
+
+## Video-LLaVa
+### Set Up the Dependencies as:
+```
+# install VideoLLaVA
+cd VideoLLaVA/
+pip install -e .
+# install VLMEvalKit
+cd VLMEvalKit-evaluation/
+pip install -e .
+```
+### Video-MME
+```bash
+cd VLMEvalKit-evaluation/
+torchrun --nproc-per-node=1 --master-port 12311 run.py --data  Video-MME --work-dir ./results/videollava_VTW --model Video-LLaVA-7B 
+```
+### TGIF
+1. Inference to get the result.
+```Shell
+cd VideoLLaVA/
+bash scripts/v1_5/eval/run_qa_tgif.sh
+```
+
+2. GPT-Assistant evaluation.
+```Shell
+bash scripts/v1_5/eval/eval_qa_tgif.sh
+```
+
+## Downstream Task
+### [LISA](/LISA/readme.md)
+
+
+

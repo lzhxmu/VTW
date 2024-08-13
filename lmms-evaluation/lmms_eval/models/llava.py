@@ -75,6 +75,7 @@ class Llava(lmms):
             self.device_map = "cuda:0"
 
         self._tokenizer, self._model, self._image_processor, self._max_length = load_pretrained_model(pretrained, None, get_model_name_from_path(pretrained), device_map=self.device_map, use_flash_attention_2=use_flash_attention_2)
+        
         self._config = self._model.config
         self.model.eval()
         self.model.tie_weights()

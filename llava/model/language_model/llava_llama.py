@@ -25,13 +25,14 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.generation.utils import GenerateOutput
 
 from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
-from .VTW import VTWLlamaModel, VTWLlamaForCausalLM
+from .VTW import VTWLlamaModel, VTWLlamaForCausalLM, temp_cache
 import pdb
 
 class LlavaConfig(LlamaConfig):
     model_type = "llava_llama"
 
-class LlavaLlamaModel(LlavaMetaModel, VTWLlamaModel): # Alter LlamaModel to VTWLlamaModel 
+
+class LlavaLlamaModel(LlavaMetaModel, VTWLlamaModel): # LlamaModel -> VTWLlamaModel 
     config_class = LlavaConfig
 
     def __init__(self, config: LlamaConfig):
@@ -112,7 +113,6 @@ class LlavaLlamaForCausalLM(VTWLlamaForCausalLM, LlavaMetaForCausalLM): #  Alter
         attention_mask = kwargs.pop("attention_mask", None)
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
-
         if images is not None:
             (
                 inputs,

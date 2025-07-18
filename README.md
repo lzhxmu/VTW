@@ -100,10 +100,13 @@ This work is built upon the [LLaVA](https://github.com/haotian-liu/LLaVA), [Vide
 
 ## Citation
 ```
-@article{lin2024boosting,
-  title={Boosting Multimodal Large Language Models with Visual Tokens Withdrawal for Rapid Inference},
+@inproceedings{lin2025boosting,
+  title={Boosting multimodal large language models with visual tokens withdrawal for rapid inference},
   author={Lin, Zhihang and Lin, Mingbao and Lin, Luxi and Ji, Rongrong},
-  journal={arXiv preprint arXiv:2405.05803},
-  year={2024}
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={39},
+  number={5},
+  pages={5334--5342},
+  year={2025}
 }
 ```

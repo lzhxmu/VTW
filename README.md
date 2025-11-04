@@ -2,6 +2,7 @@
 Code release for "[Boosting Multimodal Large Language Models with Visual Tokens
 Withdrawal for Rapid Inference](https://arxiv.org/abs/2405.05803)" 
 
+
 ## News
 - **2025.01.18**: 🔥 VTW has been selected for oral presentation at AAAI'25!
 - **2024.12.10**: 🔥 VTW has been accepted to AAAI'25!
@@ -94,6 +95,12 @@ bash scripts/v1_5/eval/eval_qa_tgif.sh
 ### [LISA](/LISA/readme.md)
 
 
+## Affiliation
+
+1. Shanghai Innovation Institute
+2. Xiamen University
+3. Rakuten
+4. East China Normal University
 
 ## Acknowledge
 This work is built upon the [LLaVA](https://github.com/haotian-liu/LLaVA), [VideoLLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA), [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval), and [VLMEvalKit](https://github.com/open-compass/VLMEvalKit/).

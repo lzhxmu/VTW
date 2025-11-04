@@ -99,8 +99,7 @@ bash scripts/v1_5/eval/eval_qa_tgif.sh
 
 1. Shanghai Innovation Institute
 2. Xiamen University
-3. Rakuten
-4. East China Normal University
+3. Skywork AI
 
 ## Acknowledge
 This work is built upon the [LLaVA](https://github.com/haotian-liu/LLaVA), [VideoLLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA), [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval), and [VLMEvalKit](https://github.com/open-compass/VLMEvalKit/).
